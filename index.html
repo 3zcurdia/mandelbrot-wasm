@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>mandelbrot.rs</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  </head>
+  <body>
+    <main class="container">
+      <h1>🦀 mandelbrot.rs</h1>
+      <canvas id="canvas" width="800" height="600">
+      </canvas>
+      <p id="message">Processing...</p>
+      <script type="module">
+        import init, { mandelbrot_pixels } from "./pkg/mandelbrot.js";
+
+        await init();
+
+        const canvas = document.getElementById("canvas");
+        const width = parseInt(canvas.getAttribute("width"));
+        const height = parseInt(canvas.getAttribute("height"));
+        let ctx = canvas.getContext("2d");
+
+        let start = Date.now();
+        let pixels = Uint8ClampedArray.from(mandelbrot_pixels(width, height, 1000, -2.0, 1.0, -1.0, 1.0));
+        console.log("Mandelbrot Time: " + (Date.now() - start) + "ms");
+        var imageData = new ImageData(pixels, width, height);
+        ctx.putImageData(imageData, 0, 0);
+
+        document.getElementById("message").innerText =  "Elapsed Time: " + (Date.now() - start) + "ms";
+      </script>
+    </main>
+  </body>
+</html>
